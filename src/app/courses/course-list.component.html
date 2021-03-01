@@ -1,0 +1,64 @@
+<h2>Course List</h2>
+
+<div class="form-group">
+    <label class="col-sm-2 col-from-label">Filter By:</label>
+    <div class="col-sm-10">
+        <input [(ngModel)]='filter' class="form-control">
+    </div>
+</div>
+
+<table class="table table-stripped">
+    <thead>
+        <tr>
+            <th>Image</th>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Code</th>            
+            <th>Relase Date</th>
+            <th>Rating</th>
+            <th>Options</th>
+        </tr>
+    </thead>
+    <tbody>
+        <!--
+            *ngFor="let course of courses"
+            *ngFor é um recurso do Angular que permite a iteracao sobre uma lista
+            course é uma variável de template que itera sobre a lista courses criada 
+            no nosso componente course-list.component.ts
+        -->
+        <tr *ngFor="let course of filteredCourses">
+            <!--
+                Aqui utilizamos a interpolação para exibir o valor da propriedade.
+                E para integrar um componente Angular com o html, o atributo que 
+                estamos integrando deve vir entre colchetes.
+            -->
+            <td><img [src]='course.imageUrl' width="40" height="40"></td>
+            <td>{{course.name}}</td>
+            <td>{{course.price}}</td>
+            <!--
+                Utilizando os pipes conseguimos alterar a maneira com
+                que as propriedades do objeto que estamos exibindo
+                ssão mostradas no navegador.
+                Veja exemplo abaixo.
+                Utilizando um pipe nativo do Angular: lower case e date
+                Pode-se utilizar mais de 1 pipe concatenando-os
+            -->
+            <td>{{course.code | lowercase | replace: "-":" "}}</td>            
+            <td>{{course.releaseDate | date: "dd/MM/yyyy"}}</td>
+            <td>                
+                <app-star [rating]="course.rating"></app-star>
+            </td>
+            <td>
+                <!--
+                    routerLink permite integrar o html com uma rota criada no angular
+                    recebe um array que contém a url de redirecionamento e variáveis de
+                    parâmetros (path variable)
+                    O link montado para o routerLink abaixo é
+                    http://localhost:4200/courses/info/1 (onde 1 é o id do curso, podendo ser modificado)
+                -->
+                <a [routerLink]="['/courses/info', course.id]" class="btn btn-primary mr-2">Edit</a>
+                <button (click)="deleteById(course.id)"class="btn btn-danger">Delete</button>                
+            </td>
+        </tr>
+    </tbody>
+</table>
